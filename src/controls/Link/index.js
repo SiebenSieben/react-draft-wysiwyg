@@ -59,8 +59,12 @@ class Link extends Component {
 
   onChange = (action, title, target, targetOption) => {
     if (action === 'link') {
-      const links = linkify.match(target);
-      const linkifiedTarget = links && links[0] ? links[0].url : '';
+      let linkifiedTarget = target;
+
+      if (target.indexOf('tel:') === -1) {
+        const links = linkify.match(target);
+        linkifiedTarget = links && links[0] ? links[0].url : '';
+      }
       this.addLink(title, linkifiedTarget, targetOption);
     } else {
       this.removeLink();
