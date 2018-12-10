@@ -3,11 +3,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { RichUtils, EditorState, Modifier } from 'draft-js';
-import {
-  getSelectionText,
-  getEntityRange,
-  getSelectionEntity,
-} from 'draftjs-utils';
+import { getSelectionText, getEntityRange, getSelectionEntity } from 'draftjs-utils';
 import linkifyIt from 'linkify-it';
 
 import LayoutComponent from './Component';
@@ -41,8 +37,7 @@ class Link extends Component {
 
   componentWillReceiveProps(properties: Object): void {
     const newState = {};
-    if (properties.editorState &&
-      this.props.editorState !== properties.editorState) {
+    if (properties.editorState && this.props.editorState !== properties.editorState) {
       newState.currentEntity = getSelectionEntity(properties.editorState);
     }
     this.setState(newState);
@@ -57,7 +52,7 @@ class Link extends Component {
     this.signalExpanded = !this.state.expanded;
   };
 
-  onChange = (action, title, target, targetOption) => {
+  onChange = (action, title, target, targetOption, utmContent) => {
     if (action === 'link') {
       let linkifiedTarget = target;
 
@@ -65,27 +60,31 @@ class Link extends Component {
         const links = linkify.match(target);
         linkifiedTarget = links && links[0] ? links[0].url : '';
       }
-      this.addLink(title, linkifiedTarget, targetOption);
+      this.addLink(title, linkifiedTarget, targetOption, utmContent);
     } else {
       this.removeLink();
     }
-  }
+  };
 
   getCurrentValues = () => {
     const { editorState } = this.props;
     const { currentEntity } = this.state;
     const contentState = editorState.getCurrentContent();
     const currentValues = {};
-    if (currentEntity && (contentState.getEntity(currentEntity).get('type') === 'LINK')) {
+    if (currentEntity && contentState.getEntity(currentEntity).get('type') === 'LINK') {
       currentValues.link = {};
       const entityRange = currentEntity && getEntityRange(editorState, currentEntity);
-      currentValues.link.target = currentEntity && contentState.getEntity(currentEntity).get('data').url;
-      currentValues.link.targetOption = currentEntity && contentState.getEntity(currentEntity).get('data').targetOption;
-      currentValues.link.title = (entityRange && entityRange.text);
+      currentValues.link.target =
+        currentEntity && contentState.getEntity(currentEntity).get('data').url;
+      currentValues.link.utmContent =
+        currentEntity && contentState.getEntity(currentEntity).get('data').utmContent;
+      currentValues.link.targetOption =
+        currentEntity && contentState.getEntity(currentEntity).get('data').targetOption;
+      currentValues.link.title = entityRange && entityRange.text;
     }
     currentValues.selectionText = getSelectionText(editorState);
     return currentValues;
-  }
+  };
 
   doExpand: Function = (): void => {
     this.setState({
@@ -98,7 +97,7 @@ class Link extends Component {
       expanded: this.signalExpanded,
     });
     this.signalExpanded = false;
-  }
+  };
 
   doCollapse: Function = (): void => {
     this.setState({
@@ -128,8 +127,12 @@ class Link extends Component {
     }
   };
 
-  addLink: Function = (linkTitle, linkTarget, linkTargetOption): void => {
-    const { editorState, onChange, config: { trailingWhitespace = false } } = this.props;
+  addLink: Function = (linkTitle, linkTarget, linkTargetOption, utmContent): void => {
+    const {
+      editorState,
+      onChange,
+      config: { trailingWhitespace = false },
+    } = this.props;
     const { currentEntity } = this.state;
     let selection = editorState.getSelection();
 
@@ -150,7 +153,11 @@ class Link extends Component {
     }
     const entityKey = editorState
       .getCurrentContent()
-      .createEntity('LINK', 'MUTABLE', { url: linkTarget, targetOption: linkTargetOption })
+      .createEntity('LINK', 'MUTABLE', {
+        url: linkTarget,
+        targetOption: linkTargetOption,
+        utmContent,
+      })
       .getLastCreatedEntityKey();
 
     let contentState = Modifier.replaceText(

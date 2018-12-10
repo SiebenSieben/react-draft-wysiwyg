@@ -1,5 +1,4 @@
 module.exports = {
-
   // Generic
   'generic.add': 'Добавить',
   'generic.cancel': 'Отменить',
@@ -44,7 +43,8 @@ module.exports = {
   'components.controls.image.image': 'Изображение',
   'components.controls.image.fileUpload': 'Файлы',
   'components.controls.image.byURL': 'URL',
-  'components.controls.image.dropFileText': 'Переместите в эту область файлы или кликните для загрузки',
+  'components.controls.image.dropFileText':
+    'Переместите в эту область файлы или кликните для загрузки',
 
   // Inline
   'components.controls.inline.bold': 'Жирный',
@@ -59,6 +59,7 @@ module.exports = {
   'components.controls.link.linkTitle': 'Текст',
   'components.controls.link.linkTarget': 'Адрес ссылки',
   'components.controls.link.linkTargetOption': 'Открывать в новом окне',
+  'components.controls.link.utmContent': 'utm_content',
   'components.controls.link.link': 'Ссылка',
   'components.controls.link.unlink': 'Убрать ссылку',
 
