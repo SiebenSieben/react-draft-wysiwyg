@@ -1,5 +1,4 @@
 module.exports = {
-
   // Generic
   'generic.add': 'Add',
   'generic.cancel': 'Cancel',
@@ -59,6 +58,7 @@ module.exports = {
   'components.controls.link.linkTitle': 'Link Title',
   'components.controls.link.linkTarget': 'Link Target',
   'components.controls.link.linkTargetOption': 'Open link in new window',
+  'components.controls.link.utmContent': 'utm_content',
   'components.controls.link.link': 'Link',
   'components.controls.link.unlink': 'Unlink',
 
